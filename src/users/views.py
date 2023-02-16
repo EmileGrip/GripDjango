@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from src.users.models import User
-from src.users.permissions import IsUserOrReadOnly
+from src.users.permissions import IsUserOrReadOnly,IsManager,IsAdmin
 from src.users.serializers import CreateUserSerializer, UserSerializer
 
 
@@ -16,7 +16,7 @@ class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Cre
 
     queryset = User.objects.all()
     serializers = {'default': UserSerializer, 'create': CreateUserSerializer}
-    permissions = {'default': (IsUserOrReadOnly,), 'create': (AllowAny,)}
+    permissions = {'default': (IsManager,IsAdmin,), 'create': (IsManager,IsAdmin,)}
 
     def get_serializer_class(self):
         return self.serializers.get(self.action, self.serializers['default'])

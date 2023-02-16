@@ -32,6 +32,9 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 class User(AbstractUser):
     profile_picture = ThumbnailerImageField('ProfilePicture', upload_to='profile_pictures/', blank=True, null=True)
     is_company =  models.BooleanField(null=True,blank=True,default=True)
+    is_manager = models.BooleanField(default=False)
+    is_employer = models.BooleanField(default=False)
+
 
     def get_tokens(self):
         refresh = RefreshToken.for_user(self)
@@ -43,6 +46,19 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+
+class AdminManager(models.Model):
+    admin = models.ForeignKey(User,related_name='admin',on_delete=models.CASCADE)
+    manager = models.ForeignKey(User,related_name='manager',on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class AdminManager(models.Model):
+    manager = models.ForeignKey(User,related_name='manager',on_delete=models.CASCADE)
+    employer = models.ForeignKey(User,related_name='employer',on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 saved_file.connect(generate_aliases_global)
