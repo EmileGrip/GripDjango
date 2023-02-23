@@ -16,7 +16,7 @@ class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Cre
 
     queryset = User.objects.all()
     serializers = {'default': UserSerializer, 'create': CreateUserSerializer}
-    permissions = {'default': (IsManager,IsAdmin,), 'create': (IsManager,IsAdmin,)}
+    permissions = {'default': (IsAdmin,), 'create': (IsAdmin,)}
 
     def get_serializer_class(self):
         return self.serializers.get(self.action, self.serializers['default'])

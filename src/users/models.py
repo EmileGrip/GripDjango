@@ -49,13 +49,14 @@ class User(AbstractUser):
     
 
 class AdminManager(models.Model):
-    admin = models.ForeignKey(User,related_name='admin',on_delete=models.CASCADE)
+    admin = models.ForeignKey(User,related_name='admin',on_delete=models.CASCADE,null=True)
     manager = models.ForeignKey(User,related_name='manager',on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class AdminManager(models.Model):
-    manager = models.ForeignKey(User,related_name='manager',on_delete=models.CASCADE)
+class AdminManagerEmployer(models.Model):
+    admin = models.ForeignKey(User,related_name='admin_employer',on_delete=models.CASCADE,null=True)
+    manager = models.ForeignKey(User,related_name='manager_employer',on_delete=models.CASCADE)
     employer = models.ForeignKey(User,related_name='employer',on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

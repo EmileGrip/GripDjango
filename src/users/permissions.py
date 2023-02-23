@@ -19,8 +19,9 @@ class IsAdmin(permissions.BasePermission):
     Object-level permission to only allow owners of an object to edit it.
     """
     def has_permission(self, request, view):
+        print('ssssssIsAdminsssssssssss',request.user.pk)
   
-        if User.objects.filter(is_manager=True,pk=request.user.pk).exists():
+        if User.objects.filter(is_company=True,pk=request.user.pk).exists():
             print('ssssssIsAdminsssssssssss')
             return True
 
@@ -43,6 +44,7 @@ class IsManager(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
+        print('ssssssIsAdminsssssssssss')
 
         if User.objects.filter(is_manager=True,pk=request.user.pk).exists():
             print('ssssssIsManagersssssssssss')
