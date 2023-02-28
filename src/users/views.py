@@ -3,10 +3,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework.views import APIView
+from rest_framework.decorators import api_view, permission_classes
 from src.users.models import User
 from src.users.permissions import IsUserOrReadOnly,IsManager,IsAdmin
 from src.users.serializers import CreateUserSerializer, UserSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -31,3 +33,19 @@ class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Cre
             return Response(UserSerializer(self.request.user, context={'request': self.request}).data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': 'Wrong auth token' + e}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(CreateUserSerializer(request.user, context={'request': request}).data)
+
+    def put(self, request):
+        serializer = UserSerializer(
+            request.user, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.save()
+            return Response(UserSerializer(user, context={'request': request}).data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

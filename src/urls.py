@@ -38,6 +38,7 @@ urlpatterns = [
     # auth
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path("api/v1/user/", include("src.users.urls")),
     path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # social login
     url('', include('social_django.urls', namespace='social')),
