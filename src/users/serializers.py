@@ -1,8 +1,17 @@
 from rest_framework import serializers
 
-from src.users.models import User,AdminManager,AdminManagerEmployer
+from src.users.models import User,AdminManager,AdminManagerEmployer,Skill
 from src.common.serializers import ThumbnailerJSONSerializer
 
+class SkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = (
+            'id',
+            'name',
+            'title',
+            'description'
+        )
 
 class UserSerializer(serializers.ModelSerializer):
     profile_picture = ThumbnailerJSONSerializer(required=False, allow_null=True, alias_target='src.users')

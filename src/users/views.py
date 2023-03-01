@@ -5,11 +5,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
-from src.users.models import User
+from src.users.models import User,Skill
 from src.users.permissions import IsUserOrReadOnly,IsManager,IsAdmin
-from src.users.serializers import CreateUserSerializer, UserSerializer
+from src.users.serializers import CreateUserSerializer, UserSerializer,SkillSerializer
 from rest_framework.permissions import IsAuthenticated
-
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -49,3 +50,16 @@ class MeView(APIView):
             return Response(UserSerializer(user, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class SkillViewset(viewsets.ReadOnlyModelViewSet):
+    # MultiPartParser AND FormParser
+    # https://www.django-rest-framework.org/api-guide/parsers/#multipartparser
+    # "You will typically want to use both FormParser and MultiPartParser
+    # together in order to fully support HTML form data."
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['name','title','description']
+    search_fields = ['name','title','description']
+
+    queryset = Skill.objects.all()
+    serializer_class = SkillSerializer

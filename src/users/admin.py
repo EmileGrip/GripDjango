@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from src.users.models import User
+from src.users.models import User,Skill
 
 
 @admin.register(User)
@@ -22,4 +22,13 @@ class UserAdmin(UserAdmin):
         (_('Profile image'), {'fields': ('profile_picture',)}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    )
+
+
+@admin.register(Skill)
+class SkillAdmin(admin.ModelAdmin):
+    list_display=(
+        'name',
+        'title',
+        'description'
     )

@@ -62,4 +62,13 @@ class AdminManagerEmployer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+
+class Skill(models.Model):
+    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,blank=True, null=True)
+    description = models.CharField(max_length=255,blank=True, null=True)
+
+    def __str__(self) -> str:
+        return self.name
+
 saved_file.connect(generate_aliases_global)
