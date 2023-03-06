@@ -1,61 +1,56 @@
 ```mermaid
-  erDiagram
-    entity Employee {
-        EmployeeID PK
-        --
+erDiagram
+    Employee {
+        PK EmployeeID
         FirstName
         LastName
         Email
         Phone
         Title
         Department
-        ManagerID
+        FK ManagerID -> Employee.EmployeeID
     }
-    entity Skill {
-        SkillID PK
-        --
+    Skill {
+        PK SkillID
         SkillName
         Description
     }
-    entity Occupation {
-        OccupationID PK
-        --
+    Occupation {
+        PK OccupationID
         OccupationName
         Description
     }
-    entity Job {
-        JobID PK
-        --
+    Job {
+        PK JobID
         JobTitle
         Description
-        OccupationID
+        FK OccupationID -> Occupation.OccupationID
     }
-    entity EmployeeSkill {
-        EmployeeID PK
-        SkillID PK
-        --
+    EmployeeSkill {
+        PK EmployeeID, SkillID
         SkillLevel
+        FK EmployeeID -> Employee.EmployeeID
+        FK SkillID -> Skill.SkillID
     }
-    entity JobSkill {
-        JobID PK
-        SkillID PK
-        --
+    JobSkill {
+        PK JobID, SkillID
         SkillLevel
+        FK JobID -> Job.JobID
+        FK SkillID -> Skill.SkillID
     }
-    entity DevelopmentPlan {
-        PlanID PK
-        --
+    DevelopmentPlan {
+        PK PlanID
         PlanName
         Description
-        EmployeeID
+        FK EmployeeID -> Employee.EmployeeID
     }
-    entity PlanSkill {
-        PlanID PK
-        SkillID PK
-        --
+    PlanSkill {
+        PK PlanID, SkillID
         SkillLevel
+        FK PlanID -> DevelopmentPlan.PlanID
+        FK SkillID -> Skill.SkillID
     }
-
+    
     Employee ||--o{ EmployeeSkill : Has
     Employee ||--o{ DevelopmentPlan : Has
     DevelopmentPlan ||--o{ PlanSkill : Includes
@@ -64,4 +59,4 @@
     Skill ||--o{ JobSkill : Has
     Skill ||--o{ EmployeeSkill : Has
     Skill ||--o{ PlanSkill : Has
-   ```
+```
