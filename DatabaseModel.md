@@ -1,7 +1,7 @@
 ```mermaid
   erDiagram
     entity Employee {
-        * EmployeeID
+        EmployeeID PK
         --
         FirstName
         LastName
@@ -12,46 +12,46 @@
         ManagerID
     }
     entity Skill {
-        * SkillID
+        SkillID PK
         --
         SkillName
         Description
     }
     entity Occupation {
-        * OccupationID
+        OccupationID PK
         --
         OccupationName
         Description
     }
     entity Job {
-        * JobID
+        JobID PK
         --
         JobTitle
         Description
         OccupationID
     }
     entity EmployeeSkill {
-        * EmployeeID
-        * SkillID
+        EmployeeID PK
+        SkillID PK
         --
         SkillLevel
     }
     entity JobSkill {
-        * JobID
-        * SkillID
+        JobID PK
+        SkillID PK
         --
         SkillLevel
     }
     entity DevelopmentPlan {
-        * PlanID
+        PlanID PK
         --
         PlanName
         Description
         EmployeeID
     }
     entity PlanSkill {
-        * PlanID
-        * SkillID
+        PlanID PK
+        SkillID PK
         --
         SkillLevel
     }
