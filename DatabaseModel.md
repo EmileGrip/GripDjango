@@ -1,4 +1,4 @@
-mermaid
+```mermaid
   erDiagram
     entity Employee {
         * EmployeeID
@@ -64,6 +64,4 @@ mermaid
     Skill ||--o{ JobSkill : Has
     Skill ||--o{ EmployeeSkill : Has
     Skill ||--o{ PlanSkill : Has
-    ´´´
-
-        --
+   ```
