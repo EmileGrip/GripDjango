@@ -1,6 +1,6 @@
 from rest_framework.routers import SimpleRouter
 from django.urls import path,include
-from src.users.views import UserViewSet,MeView,SkillViewset
+from src.users.views import UserViewSet,MeView,SkillViewset,login
 
 users_router = SimpleRouter()
 
@@ -10,4 +10,5 @@ users_router.register(r'skills', SkillViewset)
 
 urlpatterns = [
     path("me/", MeView.as_view()),
+    path("token/", login),
 ]

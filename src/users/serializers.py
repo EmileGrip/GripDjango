@@ -24,6 +24,9 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'profile_picture',
+            'is_company',
+            'is_manager',
+            'is_employer'
         )
         read_only_fields = ('username',)
 

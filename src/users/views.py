@@ -11,6 +11,9 @@ from src.users.serializers import CreateUserSerializer, UserSerializer,SkillSeri
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from django.contrib.auth import authenticate
+from django.conf import settings
+
 
 class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -63,3 +66,21 @@ class SkillViewset(viewsets.ReadOnlyModelViewSet):
 
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def login(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if not username or not password:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        encoded_jwt = jwt.encode(
+            {"pk": str(user.pk)}, settings.SECRET_KEY, algorithm="HS256"
+        )
+        return Response(
+            data={"access": user.get_tokens(), "data": UserSerializer(user, context={'request': request}).data})
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
