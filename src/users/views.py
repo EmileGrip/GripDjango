@@ -14,6 +14,7 @@ from rest_framework import filters
 from django.contrib.auth import authenticate
 from django.conf import settings
 
+import jwt
 
 class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
