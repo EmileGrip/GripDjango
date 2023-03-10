@@ -16,14 +16,16 @@ from django.conf import settings
 
 import jwt
 
-class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
+class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet,mixins.ListModelMixin):
     """
     Creates, Updates and Retrieves - User Accounts
     """
 
     queryset = User.objects.all()
-    serializers = {'default': UserSerializer, 'create': CreateUserSerializer}
+    serializers = {'default': UserSerializer, 'create': CreateUserSerializer,'list':UserSerializer}
     permissions = {'default': (IsAdmin,), 'create': (IsAdmin,)}
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['is_manager','is_employer']
 
     def get_serializer_class(self):
         return self.serializers.get(self.action, self.serializers['default'])
