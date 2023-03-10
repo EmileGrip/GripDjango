@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
-from src.users.models import User,Skill
+from src.users.models import User,Skill,AdminManager,AdminManagerEmployer
 from src.users.permissions import IsUserOrReadOnly,IsManager,IsAdmin
 from src.users.serializers import CreateUserSerializer, UserSerializer,SkillSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -40,8 +40,45 @@ class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Cre
             return Response(UserSerializer(self.request.user, context={'request': self.request}).data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': 'Wrong auth token' + e}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+    @action(detail=False, methods=['get'], url_path='manager', url_name='list_manager')
+    def list_manager(self, request, *args, **kwargs):
+
+        print(AdminManager.objects.filter(admin=request.user).values_list('manager_id'))
+        queryset = self.filter_queryset(User.objects.filter(id__in=AdminManager.objects.filter(admin=request.user).values_list('manager_id')))
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
+    @action(detail=False, methods=['get'], url_path='employer', url_name='list_employer')
+    def list_employer(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(User.objects.filter(id__in=AdminManagerEmployer.objects.filter(admin=request.user).values_list('employer_id')))
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='employer-manager', url_name='list_employer_manager')
+    def list_employer_manager(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(User.objects.filter(id__in=AdminManagerEmployer.objects.filter(manager=request.user).values_list('employer_id')))
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
 class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
