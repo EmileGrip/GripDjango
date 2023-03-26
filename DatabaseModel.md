@@ -1,62 +1,44 @@
+# Neo4J Database Model
+
+## Schema visualization
 ```mermaid
-erDiagram
-    Employee {
-        PK EmployeeID
-        FirstName
-        LastName
-        Email
-        Phone
-        Title
-        Department
-        FK ManagerID -> Employee.EmployeeID
-    }
-    Skill {
-        PK SkillID
-        SkillName
-        Description
-    }
-    Occupation {
-        PK OccupationID
-        OccupationName
-        Description
-    }
-    Job {
-        PK JobID
-        JobTitle
-        Description
-        FK OccupationID -> Occupation.OccupationID
-    }
-    EmployeeSkill {
-        PK EmployeeID, SkillID
-        SkillLevel
-        FK EmployeeID -> Employee.EmployeeID
-        FK SkillID -> Skill.SkillID
-    }
-    JobSkill {
-        PK JobID, SkillID
-        SkillLevel
-        FK JobID -> Job.JobID
-        FK SkillID -> Skill.SkillID
-    }
-    DevelopmentPlan {
-        PK PlanID
-        PlanName
-        Description
-        FK EmployeeID -> Employee.EmployeeID
-    }
-    PlanSkill {
-        PK PlanID, SkillID
-        SkillLevel
-        FK PlanID -> DevelopmentPlan.PlanID
-        FK SkillID -> Skill.SkillID
-    }
-    
-    Employee ||--o{ EmployeeSkill : Has
-    Employee ||--o{ DevelopmentPlan : Has
-    DevelopmentPlan ||--o{ PlanSkill : Includes
-    Occupation ||--o{ Job : Has
-    Job ||--o{ JobSkill : Requires
-    Skill ||--o{ JobSkill : Has
-    Skill ||--o{ EmployeeSkill : Has
-    Skill ||--o{ PlanSkill : Has
+graph LR
+    A[Person] -- HasSkill --> B[Skill]
+    A -- HasJob --> C[Job Title]
+    C -- SimilarTo --> D[Occupation]
+    D -- HasSkill --> B
+    B <-- RelatedTo --> B
+    B -- PartOfGroup --> E[SkillGroup]
+    D -- PartOfGroup --> F[ISCOGroup]
 ```
+
+## Node properties table
+| Node       | Properties     | Description                                 |
+|------------|----------------|---------------------------------------------|
+| Skill      |                | Skills and competences                      |
+| Skill      | preferredLabel | How the skill is named in our database      |
+| Skill      | altLabels      | Other namings of the skill                  |
+| Skill      | conceptUri     | Unique ID of the skill                      |
+| Skill      | description    | Description                                 |
+| Skill      | skillType      | Type of skill (e.g. Knowledge / competence) |
+| SkillGroup |                | Categorization of skills (Taxonomy)         |
+| SkillGroup | preferredLabel | How the skill is named in our database      |
+| SkillGroup | conceptUri     | Unique ID of the skill                      |
+| SkillGroup | description    | Description                                 |
+| Person     |                | User of the app                             |
+| Person     | name           | Name                                        |
+| Person     | company        | Company                                     |
+| Person     | id             | Unique ID                                   |
+| Occupation |                | Standardized list of job titles             |
+| Occupation | preferredLabel | How the occupation is named in our database |
+| Occupation | altLabels      | Other namings of the occupation             |
+| Occupation | conceptUri     | Unique ID of the occupation                 |
+| Occupation | description    | Description                                 |
+| ISCOGroup  |                | Categorization of job titles (Taxonomy)     |
+| ISCOGroup  | preferredLabel | How the skill is named in our database      |
+| ISCOGroup  | conceptUri     | Unique ID of the skill                      |
+| ISCOGroup  | description    | Description                                 |
+| JobTitle   |                | Actual job title of the user                |
+| JobTitle   | label          | Label                                       |
+| JobTitle   | id             | Unique ID                                   |
+
